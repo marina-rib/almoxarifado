@@ -2,6 +2,16 @@ from tkinter import messagebox
 from tkinter import *
 from tkinter import ttk
 import mysql.connector
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+import os
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.units import mm
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 
 #Cria a janela principal
 janela = Tk()
@@ -48,7 +58,36 @@ def estoque_faltas():
         lista_pos2.destroy()
         bt_buscar_estoque.destroy()
         lb_cod_pos_estoque.destroy()
+        bt_baixar_pdf.destroy()
+
+    def gerar_pdf(lista_compras):
+        pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+        pasta_documentos = os.path.expanduser("~/Documents")
         
+        nome_arquivo = os.path.join(pasta_documentos, "lista_compras_almoxarifado.pdf")
+        doc = SimpleDocTemplate(nome_arquivo, pagesize=A4)
+        elements = []
+
+        styles = getSampleStyleSheet()
+        titulo_estilo = styles['Title']
+
+        titulo = Paragraph("Lista De Compras", titulo_estilo)
+        elements.append(titulo)
+
+        elements.append(Paragraph("<br/><br/>", styles['Normal']))            
+        dados = [["Código", "Minimo", "Atual", "Maximo", "Nome"]]
+        
+        
+        for item in lista_compras:
+            dados.append(list(item))
+    
+        tabela = Table(dados)
+        elements.append(tabela)
+        doc.build(elements) 
+        
+        
+    
+
     def pesquisar_estoque_baixo():
         try:
             cursor = conexao.cursor()
@@ -57,11 +96,18 @@ def estoque_faltas():
             resultados = cursor.fetchall()
             for linha in resultados:  
                 lista_pos.insert("", END, values=linha)
-                
+    
         except mysql.connector.Error as erro:
             print("Erro ao pesquisar o dado:", erro)
             messagebox.shoaskyesnowinfo("Mensagem", "pesquisa não realizada.")
-            
+        
+    cursor = conexao.cursor()
+    consulta_sql = "SELECT posicao_estoque.codigo_pos, posicao_estoque.quant_min_pos, posicao_estoque.quant_atual_pos, posicao_estoque.quant_max_pos, materiais.descricao_mat FROM posicao_estoque INNER JOIN materiais ON posicao_estoque.codigo_pos = materiais.codigo_mat WHERE posicao_estoque.quant_atual_pos < posicao_estoque.quant_min_pos"
+    cursor.execute(consulta_sql)
+    resultados1 = cursor.fetchall()        
+    lista_compras = [f"{codigo_pos}{quant_min_pos}{quant_atual_pos}{quant_max_pos}{descricao_mat}"
+                 for codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat in resultados1]
+
     def pesquisar_estoque():
         try:
             lista_pos2.delete(*lista_pos2.get_children())
@@ -99,6 +145,7 @@ def estoque_faltas():
                 lb_cod_pos_estoque.config(text=novo_texto)
                 
                 
+                
         except mysql.connector.Error as erro:
             print("Erro ao pesquisar o dado:", erro)
             messagebox.shoaskyesnowinfo("Mensagem", "pesquisa não realizada.")
@@ -124,6 +171,9 @@ def estoque_faltas():
     bt_buscar_estoque.place(relx=0.15, rely=0.11, relwidth=0.1, relheight=0.14)
     janela.bind("<Return>", lambda event: pesquisar_estoque())
     cod_pos_entry.focus()
+
+    bt_baixar_pdf = Button(frame_1, command= gerar_pdf(lista_compras), text= 'Gerar PDF', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
+    bt_baixar_pdf.place(relx=0.80, rely=0.85, relwidth=0.15, relheight=0.15)
     
     fonte = ("Arial", 14)
     lb_cod_pos_estoque = Label(frame_1, text = "", bg= '#dfe3ee', fg = '#107db2', font=fonte)
@@ -300,6 +350,7 @@ def professores():
     def buscar_prof():
         try:
             cursor = conexao.cursor()
+            
             texto_digitado = cod_prof_entry.get()
             cursor.execute("SELECT COUNT(*) FROM professor WHERE registro_prof = %s", (texto_digitado,))
             count = cursor.fetchone()[0]
