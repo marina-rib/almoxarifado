@@ -75,7 +75,7 @@ def estoque_faltas():
         elements.append(titulo)
 
         elements.append(Paragraph("<br/><br/>", styles['Normal']))            
-        dados = [["Código", "Minimo", "Atual", "Maximo", "Nome", "Faltam"]]
+        dados = [["Código", "Minimo", "Atual", "Maximo", "Item", "Adquirir"]]
         
         for item in lista_compras:
             dados.append(list(item))
