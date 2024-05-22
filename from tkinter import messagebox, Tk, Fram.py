@@ -71,7 +71,7 @@ def estoque_faltas():
         styles = getSampleStyleSheet()
         titulo_estilo = styles['Title']
 
-        titulo = Paragraph("Lista De Compras", titulo_estilo)
+        titulo = Paragraph("Itens em falta", titulo_estilo)
         elements.append(titulo)
 
         elements.append(Paragraph("<br/><br/>", styles['Normal']))            
@@ -83,20 +83,25 @@ def estoque_faltas():
         tabela = Table(dados)
 
 
-        
+        tabela = Table(dados, colWidths=[22*mm, 22*mm, 22*mm, 22*mm, 22*mm])  
+
+
         estilo = TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.darkblue),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('FONTSIZE', (0, 0), (-1, -1), 15), 
+            ('GRID', (0,0), (-1,-1), 1, colors.white),
+            ('TOPPADDING', (0,0), (-1,-1), 5), 
+            ('BOTTOMPADDING', (0,0), (-1,-1), 10)
         ])
 
         tabela.setStyle(estilo)
         elements.append(tabela)
         doc.build(elements)
-        doc.build([tabela])
  
         
     
@@ -117,14 +122,16 @@ def estoque_faltas():
     cursor = conexao.cursor()
     consulta_sql = "SELECT posicao_estoque.codigo_pos, posicao_estoque.quant_min_pos, posicao_estoque.quant_atual_pos, posicao_estoque.quant_max_pos, materiais.descricao_mat FROM posicao_estoque INNER JOIN materiais ON posicao_estoque.codigo_pos = materiais.codigo_mat WHERE posicao_estoque.quant_atual_pos < posicao_estoque.quant_min_pos"
     cursor.execute(consulta_sql)
-    resultados1 = cursor.fetchall()        
+    resultados1 = cursor.fetchall()
     lista_compras = []
     for fila in resultados1:
         codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat = fila
-        lista_compras.append([codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat])
-        quant_min_pos = int(quant_min_pos)
-        quant_atual_pos = int(quant_max_pos)
-        baixas = quant_min_pos - quant_atual_pos
+        quant_max_pos = int(quant_max_pos) 
+        quant_atual_pos = int(quant_atual_pos) 
+        baixas = ( quant_atual_pos - quant_max_pos) *-1
+        lista_compras.append([codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat, baixas])
+
+        
         
 
         
