@@ -105,8 +105,11 @@ def estoque_faltas():
     consulta_sql = "SELECT posicao_estoque.codigo_pos, posicao_estoque.quant_min_pos, posicao_estoque.quant_atual_pos, posicao_estoque.quant_max_pos, materiais.descricao_mat FROM posicao_estoque INNER JOIN materiais ON posicao_estoque.codigo_pos = materiais.codigo_mat WHERE posicao_estoque.quant_atual_pos < posicao_estoque.quant_min_pos"
     cursor.execute(consulta_sql)
     resultados1 = cursor.fetchall()        
-    lista_compras = [f"{codigo_pos}{quant_min_pos}{quant_atual_pos}{quant_max_pos}{descricao_mat}"
-                 for codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat in resultados1]
+    lista_compras = []
+    for fila in resultados1:
+        codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat = fila
+        lista_compras.append([codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat])
+
 
     def pesquisar_estoque():
         try:
