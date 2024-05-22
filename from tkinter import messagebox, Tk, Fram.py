@@ -75,16 +75,29 @@ def estoque_faltas():
         elements.append(titulo)
 
         elements.append(Paragraph("<br/><br/>", styles['Normal']))            
-        dados = [["Código", "Minimo", "Atual", "Maximo", "Nome"]]
-        
+        dados = [["Código", "Minimo", "Atual", "Maximo", "Nome", "Faltam"]]
         
         for item in lista_compras:
             dados.append(list(item))
-    
+
         tabela = Table(dados)
-        elements.append(tabela)
-        doc.build(elements) 
+
+
         
+        estilo = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.darkblue),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ])
+
+        tabela.setStyle(estilo)
+        elements.append(tabela)
+        doc.build(elements)
+        doc.build([tabela])
+ 
         
     
 
@@ -109,6 +122,12 @@ def estoque_faltas():
     for fila in resultados1:
         codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat = fila
         lista_compras.append([codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat])
+        quant_min_pos = int(quant_min_pos)
+        quant_atual_pos = int(quant_max_pos)
+        baixas = quant_min_pos - quant_atual_pos
+        
+
+        
 
 
     def pesquisar_estoque():
