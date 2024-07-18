@@ -26,8 +26,54 @@ frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
 frame_2 = Frame(janela, bd=4, bg='#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
 frame_2.place(relx=0.02, rely=0.5, relwidth=0.96, relheight=0.46)
 
+def menu_inicial():
+    def sair_menu():
+        bt_mudar_estoque.destroy()
+        bt_mudar_materiais.destroy()
+        bt_mudar_estoque_faltas.destroy()
+        manu_label.destroy()
+        frame_1.destroy()
+        frame_2.destroy()
 
+    def mudar_estoque():
+        sair_menu()
+        pos_estoque()
+    def mudar_materiais():
+        sair_menu()
+        materiais()
+    def mudar_estoque_faltas():
+        sair_menu()
+        estoque_faltas()
+    def mudar_professores():
+        sair_menu()
+        professores()
+    
+    frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
+    frame_2.destroy()
+
+    # Adiciona um título ao menu
+    manu_label = Label(frame_1, text="Menu Principal", font=("Helvetica", 24, "bold"), bg="#dfe3ee")
+    manu_label.place(relx=0.32, rely=0.13)
+    
+    bt_mudar_estoque = Button(frame_1, command=mudar_estoque, text= 'Estoque', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
+    bt_mudar_estoque.place(relx=0.15, rely=0.5, relwidth=0.30, relheight=0.15)
+    
+    bt_mudar_materiais = Button(frame_1, command=mudar_materiais, text= 'Materiais', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
+    bt_mudar_materiais.place(relx=0.15, rely=0.30, relwidth=0.30, relheight=0.15)
+    
+    bt_mudar_estoque_faltas = Button(frame_1, command=mudar_estoque_faltas, text= 'baixas', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
+    bt_mudar_estoque_faltas.place(relx=0.60, rely=0.5, relwidth=0.30, relheight=0.15)
+    
+    bt_mudar_professor = Button(frame_1, command=mudar_professores, text= 'professores', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
+    bt_mudar_professor.place(relx=0.60, rely=0.30, relwidth=0.30, relheight=0.15)
+    
 def estoque_faltas():
+    frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
+    frame_2 = Frame(janela, bd=4, bg='#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_2.place(relx=0.02, rely=0.5, relwidth=0.96, relheight=0.46)
+    
     janela.title("ALMOXARIFADO ESTOQUE, EM BAIXAS")
     conexao = mysql.connector.connect(
             host="localhost",
@@ -36,29 +82,20 @@ def estoque_faltas():
             database="almoxarifado"
         )
     
-    def mudar_materiais():
+    def menu_voltar():
         destruir_campos()
-        materiais()   
-
-    #Função para mudar para o CRUD do estoque  
-    def mudar_posicao_estoque():
-        destruir_campos()
-        pos_estoque()
-    
-    def mudar_professores():
-        destruir_campos()
-        professores()
+        menu_inicial()
         
     def destruir_campos():
         lb_cod_pos.destroy()
         cod_pos_entry.destroy()
-        bt_materiais.destroy()
-        bt_mudar_prof.destroy()
-        bt_posicao_estoque.destroy()
+        bt_mudar_menu.destroy()
         lista_pos2.destroy()
         bt_buscar_estoque.destroy()
         lb_cod_pos_estoque.destroy()
         bt_baixar_pdf.destroy()
+        frame_1.destroy()
+        frame_2.destroy()
 
     def gerar_pdf(lista_compras):
         pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
@@ -186,16 +223,10 @@ def estoque_faltas():
     
     cod_pos_entry = Entry(frame_1 )
     cod_pos_entry.place(relx= 0.05, rely= 0.15, relwidth= 0.08)
-     
-    bt_materiais = Button(frame_1, command=mudar_materiais, text= 'Materiais', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_materiais.place(relx=0.50, rely=0.85, relwidth=0.15, relheight=0.15)
     
-    bt_mudar_prof = Button(frame_1, command=mudar_professores, text= 'Professores', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_prof.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
-    
-    bt_posicao_estoque = Button(frame_1, command=mudar_posicao_estoque, text= 'Estoque', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_posicao_estoque.place(relx=0.30, rely=0.85, relwidth=0.15, relheight=0.15)
-    
+    bt_mudar_menu = Button(frame_1, command=menu_voltar, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
+    bt_mudar_menu.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
+ 
     bt_buscar_estoque = Button(frame_1, text='Buscar' ,command=pesquisar_estoque,  bg = '#107db2', fg = 'white')
     bt_buscar_estoque.place(relx=0.15, rely=0.11, relwidth=0.1, relheight=0.14)
     janela.bind("<Return>", lambda event: pesquisar_estoque())
@@ -253,6 +284,11 @@ def estoque_faltas():
 
 #Funçao para alternar até o CRUD da tabela professor
 def professores():
+    frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
+    frame_2 = Frame(janela, bd=4, bg='#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_2.place(relx=0.02, rely=0.5, relwidth=0.96, relheight=0.46)
+    
     janela.title("ALMOXARIFADO PROFESSORES")
     conexao = mysql.connector.connect(
             host="localhost",
@@ -262,24 +298,13 @@ def professores():
         )
 
     #Função para mudar para o CRUD dos materiais
-    def mudar_materiais():
+    def menu_voltar():
         destruir_campos()
-        materiais()   
-
-    #Função para mudar para o CRUD do estoque  
-    def mudar_estoque():
-        destruir_campos()
-        pos_estoque()
-        
-    def mudar_estoque_faltas():
-        destruir_campos()
-        estoque_faltas()
+        menu_inicial()   
 
         
     #Função para destruir tudo na tela a fim de sair do CRUD dos professores    
     def destruir_campos():
-        bt_mudar_materiais.destroy()
-        bt_mudar_estoque.destroy()
         bt_limpar_prof.destroy()
         bt_buscar_prof.destroy()
         bt_novo_prof.destroy()
@@ -297,9 +322,9 @@ def professores():
         senha_entry.destroy()
         lb_numero_tel.destroy()
         numero_tel_entry.destroy()
-        bt_mudar_estoque.destroy()
-        bt_mudar_materiais.destroy()
-        bt_mudar_estoque_faltas.destroy()
+        bt_menu_voltar().destroy()
+        frame_2.destroy()
+        frame_1.destroy()
      
     #Funçao para limpar atualizar automaticamente quando feita alguma mudança no banco de dados
     def limpar_tabela():
@@ -573,14 +598,8 @@ def professores():
     bt_cancelar.place(relx=0.85, rely=0.25, relwidth=0.12, relheight=0.14)  
     bt_cancelar.config(state='disabled')
     
-    bt_mudar_estoque = Button(frame_1, command=mudar_estoque, text= 'Estoque', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_estoque.place(relx=0.30, rely=0.85, relwidth=0.15, relheight=0.15)
-    
-    bt_mudar_materiais = Button(frame_1, command=mudar_materiais, text= 'Materiais', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_materiais.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
-    
-    bt_mudar_estoque_faltas = Button(frame_1, command=mudar_estoque_faltas, text= 'baixas', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_estoque_faltas.place(relx=0.50, rely=0.85, relwidth=0.15, relheight=0.15)
+    bt_menu_voltar = Button(frame_1, command=menu_inicial, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
+    bt_menu_voltar.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
     
     #labels e campos de digitaçao 
     lb_cod_prof = Label(frame_1, text = "Registro", bg= '#dfe3ee', fg = '#107db2')
@@ -644,6 +663,11 @@ def professores():
 
 #Função para alterar até o CRUD da tabela materiais
 def materiais(): 
+    frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
+    frame_2 = Frame(janela, bd=4, bg='#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_2.place(relx=0.02, rely=0.5, relwidth=0.96, relheight=0.46)
+    
     janela.title("ALMOXARIFADO MATERIAIS")
     conexao = mysql.connector.connect(
             host="localhost",
@@ -653,28 +677,18 @@ def materiais():
         ) 
     
     #Função para mudar até o CRUD da tabela posiçao_estoque
-    def mudar_posicao_estoque():
+    def mudar_menu():
         destoir_campos()
-        pos_estoque()
-      
-      
-    #Função para mudar até o CRUD da tabela professor  
-    def mudar_professores():
-        destoir_campos() 
-        professores()
-    
+        menu_inicial()
     
     #função para destroir os campos a fim de sair da tela materiais    
     def destoir_campos():
         bt_limpar_mat.destroy()
         bt_buscar_mat.destroy()
-        bt_posicao_estoque.destroy()
         lb_cod_material.destroy()
-        bt_posicao_estoque.destroy()
         bt_novo_mat.destroy()
         bt_alterar_mat.destroy()
         bt_apagar_mat.destroy()
-        bt_mudar_prof.destroy()
         cod_mateiral_entry.destroy()
         lb_tipo_mat.destroy()
         tipo_mat_entry.destroy()
@@ -687,12 +701,11 @@ def materiais():
         descricao_mat_entry.destroy()
         bt_cancelar.destroy()
         bt_confirmar.destroy()
-        bt_mudar_prof.destroy()
-        bt_mudar_estoque_faltas.destroy()
+        bt_mudar_menu.destroy()
+        frame_1.destroy()
+        frame_2.destroy()
         
-    def mudar_estoque_faltas():
-        destoir_campos()
-        estoque_faltas()
+
         
 
     #Função para limpar os campos de digitação e a tabela inferior a fim de atualizar altomaticamente     
@@ -970,14 +983,10 @@ def materiais():
     bt_cancelar.place(relx=0.85, rely=0.25, relwidth=0.12, relheight=0.14) 
     bt_cancelar.config(state='disabled')
     
-    bt_posicao_estoque = Button(frame_1, command=mudar_posicao_estoque, text= 'Estoque', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_posicao_estoque.place(relx=0.30, rely=0.85, relwidth=0.15, relheight=0.15)
     
-    bt_mudar_prof = Button(frame_1, command=mudar_professores, text= 'Professores', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_prof.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
+    bt_mudar_menu = Button(frame_1, command=mudar_menu, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
+    bt_mudar_menu.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
     
-    bt_mudar_estoque_faltas = Button(frame_1, command=mudar_estoque_faltas, text= 'baixas', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_estoque_faltas.place(relx=0.50, rely=0.85, relwidth=0.15, relheight=0.15)
     
     #labels e campos de digitaçao 
     lb_cod_material = Label(frame_1, text = "Código", bg= '#dfe3ee', fg = '#107db2')
@@ -1039,6 +1048,11 @@ def materiais():
 
 #Função para alterar até o CRUD da tabela pos_estoque
 def pos_estoque():
+    frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
+    frame_2 = Frame(janela, bd=4, bg='#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
+    frame_2.place(relx=0.02, rely=0.5, relwidth=0.96, relheight=0.46)
+    
     janela.title("ALMOXARIFADO ESTOQUE")
     conexao = mysql.connector.connect(
             host="localhost",
@@ -1047,25 +1061,16 @@ def pos_estoque():
             database="almoxarifado"
         )
     #Função para mudar até o CRUD da tabela professor
-    def mudar_professores():
+    def mudar_menu():
         destroir_campos()
-        professores()
+        menu_inicial()
         
         
-    #Função para mudar até o CRUD da tabela matetriais
-    def mudar_materiais():
-        destroir_campos()
-        materiais()
-        
-    def mudar_estoque_faltas():
-        destroir_campos()
-        estoque_faltas()
-        
+
     #Função para destroir os campos a fim de sair da tela pos_estoque    
     def destroir_campos():
         bt_limpar.destroy()
         bt_buscar.destroy()
-        bt_materiais.destroy()
         lb_cod_pos_estoque.destroy()
         cod_pos_estoque_entry.destroy()
         lb_quant_min_pos.destroy()
@@ -1079,8 +1084,9 @@ def pos_estoque():
         bt_alterar.destroy()
         bt_cancelar.destroy()
         bt_confirmar.destroy()
-        bt_mudar_prof.destroy()
-        bt_mudar_estoque_faltas.destroy()
+        bt_mudar_menu.destroy()
+        frame_2.destroy()
+        frame_1.destroy()
 
     #Função para limpar os campos de digitação e a tabela inferior 
     def limpar_texto_estoque():
@@ -1384,14 +1390,8 @@ def pos_estoque():
     bt_cancelar.place(relx=0.85, rely=0.25, relwidth=0.12, relheight=0.14)  
     bt_cancelar.config(state='disabled')
     
-    bt_materiais = Button(frame_1, command=mudar_materiais, text= 'Materiais', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_materiais.place(relx=0.30, rely=0.85, relwidth=0.15, relheight=0.15)
-    
-    bt_mudar_prof = Button(frame_1, command=mudar_professores, text= 'Professores', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_prof.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
-    
-    bt_mudar_estoque_faltas = Button(frame_1, command=mudar_estoque_faltas, text= 'baixas', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
-    bt_mudar_estoque_faltas.place(relx=0.50, rely=0.85, relwidth=0.15, relheight=0.15)
+    bt_mudar_menu = Button(frame_1, command=mudar_menu, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
+    bt_mudar_menu.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
     
     #labels e campos de digitaçao 
     
@@ -1443,6 +1443,6 @@ def pos_estoque():
     scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
     
 #chama a função pos_estoque para que seja a primeira tela ao entrar no programa 
-pos_estoque()
+menu_inicial()
 #mantem a janela aberta sem que se feche assim que clique em entrar
 janela.mainloop()
