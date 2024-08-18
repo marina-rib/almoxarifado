@@ -62,10 +62,10 @@ def menu_inicial():
     bt_mudar_materiais = Button(frame_1, command=mudar_materiais, text= 'Materiais', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
     bt_mudar_materiais.place(relx=0.15, rely=0.30, relwidth=0.30, relheight=0.15)
     
-    bt_mudar_estoque_faltas = Button(frame_1, command=mudar_estoque_faltas, text= 'baixas', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
+    bt_mudar_estoque_faltas = Button(frame_1, command=mudar_estoque_faltas, text= 'Baixas', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
     bt_mudar_estoque_faltas.place(relx=0.60, rely=0.5, relwidth=0.30, relheight=0.15)
     
-    bt_mudar_professor = Button(frame_1, command=mudar_professores, text= 'professores', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
+    bt_mudar_professor = Button(frame_1, command=mudar_professores, text= 'Professores', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
     bt_mudar_professor.place(relx=0.60, rely=0.30, relwidth=0.30, relheight=0.15)
     
 def estoque_faltas():
@@ -168,12 +168,6 @@ def estoque_faltas():
         baixas = ( quant_atual_pos - quant_max_pos) *-1
         lista_compras.append([codigo_pos, quant_min_pos, quant_atual_pos, quant_max_pos, descricao_mat, baixas])
 
-        
-        
-
-        
-
-
     def pesquisar_estoque():
         try:
             lista_pos2.delete(*lista_pos2.get_children())
@@ -209,15 +203,13 @@ def estoque_faltas():
                 qnt_sobre = str(qnt_sobre)
                 novo_texto = "Produto a acima do maximo : " + qnt_sobre
                 lb_cod_pos_estoque.config(text=novo_texto)
-                
-                
-                
+
+
         except mysql.connector.Error as erro:
             print("Erro ao pesquisar o dado:", erro)
             messagebox.shoaskyesnowinfo("Mensagem", "pesquisa não realizada.")
 
 
-    
     lb_cod_pos = Label(frame_1, text = "Registro", bg= '#dfe3ee', fg = '#107db2')
     lb_cod_pos.place(relx= 0.05, rely= 0.05 )
     
@@ -238,6 +230,8 @@ def estoque_faltas():
     fonte = ("Arial", 14)
     lb_cod_pos_estoque = Label(frame_1, text = "", bg= '#dfe3ee', fg = '#107db2', font=fonte)
     lb_cod_pos_estoque.place(relx= 0.05, rely= 0.50, relwidth=0.80, relheight=0.15)
+    
+    
     
     lista_pos2 = ttk.Treeview(frame_1, height=2,column=("col1", "col2", "col3", "col4", "col5", "col6" ))
     lista_pos2.heading("#0", text="")
@@ -275,9 +269,9 @@ def estoque_faltas():
     scroolLista = Scrollbar(frame_2, orient='vertical')
     lista_pos.configure(yscroll=scroolLista.set)
     scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
-    
-    pesquisar_estoque_baixo()
 
+    pesquisar_estoque_baixo()
+    
     
 #=========================================================================================================#
 #PROFESSOR#
@@ -404,7 +398,6 @@ def professores():
     def buscar_prof():
         try:
             cursor = conexao.cursor()
-            
             texto_digitado = cod_prof_entry.get()
             cursor.execute("SELECT COUNT(*) FROM professor WHERE registro_prof = %s", (texto_digitado,))
             count = cursor.fetchone()[0]
@@ -566,6 +559,28 @@ def professores():
             pesquisar_tabela_prof() 
             cod_prof_entry.focus()
             
+    def item_selecionado_lista_prof(event):
+        for selected_item in lista_prof.selection():
+            item = lista_prof.item(selected_item)
+            record = item['values']
+            nome_prof_entry.config(state='normal')
+            tipo_usuario_entry.config(state='normal')
+            senha_entry.config(state='normal', show="*")
+            numero_tel_entry.config(state='normal')
+            cod_prof_entry.delete(0, END)
+            tipo_usuario_entry.delete(0, END)
+            senha_entry.delete(0, END)
+            numero_tel_entry.delete(0, END)
+            cod_prof_entry.insert(0, record[0] )
+            nome_prof_entry.insert(0, record[1] )
+            numero_tel_entry.insert(0, record[2] )
+            tipo_usuario_entry.insert(0, record[3] )
+            senha_entry.insert(0, record[4] )
+            nome_prof_entry.config(state='disabled')
+            tipo_usuario_entry.config(state='disabled')
+            senha_entry.config(state='disabled')
+            numero_tel_entry.config(state='disabled')     
+            
 #==================================================================================================================================================#
          
     
@@ -653,9 +668,11 @@ def professores():
     scroolLista = Scrollbar(frame_2, orient='vertical')
     lista_prof.configure(yscroll=scroolLista.set)
     scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
-    
+    lista_prof.bind("<ButtonRelease-1>", item_selecionado_lista_prof)
+
     #chama automaticamente pesquisar_tabela para que assim que o usuario clique ja apareça os registros
     pesquisar_tabela_prof()
+
 
 
 #==================================================================================================================================================#
@@ -739,6 +756,7 @@ def materiais():
         numero_bp_mat = numero_bp_mat_entry.get()
         descricao_mat = descricao_mat_entry.get()
         observacao_mat = observacao_mat_entry.get()
+        
         if codigo_mat == "" or tipo_mat =="" or numero_bp_mat == "" or descricao_mat == "" or observacao_mat == "":
             messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos, e tente novamente.")
         else:
@@ -949,7 +967,31 @@ def materiais():
             limpar_material()
             lista_materiais.delete(*lista_materiais.get_children())
             buscar_tabela_materiais()
-    
+            
+    def item_selecionado_lista_materiais(event):
+        for selected_item in lista_materiais.selection():
+            item = lista_materiais.item(selected_item)
+            record = item['values']
+            tipo_mat_entry.config(state='normal')
+            numero_bp_mat_entry.config(state='normal')
+            observacao_mat_entry.config(state='normal')
+            descricao_mat_entry.config(state='normal')
+            cod_mateiral_entry.delete(0, END)
+            descricao_mat_entry.delete(0, END) 
+            tipo_mat_entry.delete(0, END)
+            numero_bp_mat_entry.delete(0, END)
+            observacao_mat_entry.delete(0, END)
+            cod_mateiral_entry.insert(0, record[0] )
+            tipo_mat_entry.insert(0, record[1] )
+            numero_bp_mat_entry.insert(0, record[2] )
+            observacao_mat_entry.insert(0, record[4] )
+            descricao_mat_entry.insert(0, record[3] )
+            tipo_mat_entry.config(state='disabled')
+            numero_bp_mat_entry.config(state='disabled')
+            observacao_mat_entry.config(state='disabled')
+            descricao_mat_entry.config(state='disabled')
+            
+        
     
  #==================================================================================================================================================#
          
@@ -987,14 +1029,12 @@ def materiais():
     bt_mudar_menu = Button(frame_1, command=mudar_menu, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_mudar_menu.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
     
-    
     #labels e campos de digitaçao 
     lb_cod_material = Label(frame_1, text = "Código", bg= '#dfe3ee', fg = '#107db2')
     lb_cod_material.place(relx= 0.05, rely= 0.05 )
     cod_mateiral_entry = Entry(frame_1 )
     cod_mateiral_entry.place(relx= 0.05, rely= 0.15, relwidth= 0.08)
     cod_mateiral_entry.focus()
-
 
     lb_tipo_mat = Label(frame_1, text="Tipo(E / F / C)", bg= '#dfe3ee', fg = '#107db2')
     lb_tipo_mat.place(relx=0.05, rely=0.35)
@@ -1041,6 +1081,7 @@ def materiais():
     
     #chama automaticamente buscar_tabela_materiais para que assim que o usuario clique ja apareça os registros
     buscar_tabela_materiais()
+    lista_materiais.bind("<ButtonRelease-1>", item_selecionado_lista_materiais)
     
     
 #==================================================================================================================================================#
@@ -1358,7 +1399,24 @@ def pos_estoque():
             buscar_tabela_posicao_estoque()
             cod_pos_estoque_entry.focus()
 
-
+    def item_selecionado_pos_estoque(event):
+        for selected_item in lista_pos.selection():
+            item = lista_pos.item(selected_item)
+            record = item['values']
+            quant_min_pos_entry.config(state='normal')
+            quant_atual_pos_entry.config(state='normal')
+            quant_max_pos_entry.config(state='normal')   
+            cod_pos_estoque_entry.delete(0, END)
+            quant_min_pos_entry.delete(0, END) 
+            quant_atual_pos_entry.delete(0, END)
+            quant_max_pos_entry.delete(0, END) 
+            cod_pos_estoque_entry.insert(0, record[0] )
+            quant_min_pos_entry.insert(0, record[1] )
+            quant_atual_pos_entry.insert(0, record[2] )
+            quant_max_pos_entry.insert(0, record[3] )
+            quant_min_pos_entry.config(state='disabled')
+            quant_atual_pos_entry.config(state='disabled')
+            quant_max_pos_entry.config(state='disabled')  
  #==================================================================================================================================================#
   
     #Botoens da tela estoque
@@ -1441,6 +1499,7 @@ def pos_estoque():
     scroolLista = Scrollbar(frame_2, orient='vertical')
     lista_pos.configure(yscroll=scroolLista.set)
     scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
+    lista_pos.bind("<ButtonRelease-1>", item_selecionado_pos_estoque)
     
 #chama a função pos_estoque para que seja a primeira tela ao entrar no programa 
 menu_inicial()
