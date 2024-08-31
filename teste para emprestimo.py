@@ -131,7 +131,21 @@ def emprestimo():
             qnt_atual_entry.config(state='disabled')
             material_entry.config(state='disabled')
             pos_mat_mov_entry.config(state='disabled')
+    
+    def adicionar_emprestimo():
+        try:
+            cursor = conexao.cursor()
 
+
+
+                        
+        except mysql.connector.Error as erro:
+                print("Erro ao pesquisar o dado:", erro)
+                messagebox.showinfo("Mensagem", "Pesquisa não realizada.")
+
+
+
+            
     def buscar_emprestimo():
         try:
             cursor = conexao.cursor()
@@ -169,24 +183,83 @@ def emprestimo():
                 bt_confirmar.config(state='disabled')            
                         
             else:
-                qnt_mat_entry.config(state='normal')
-                cod_prof_entry.config(state='normal')
-                pos_mat_mov_entry.config(state='normal')
-                data_emprestimo_entry.config(state='normal')
-                bt_confirmar.config(state='normal')
-                bt_cancelar.config(state='normal')
-                cod_emprestimo_entry.config(state='disabled')  
+                resposta = messagebox.askyesno("Mensagem", "Código não encontrado, deseja realizar um novo emprestimo?")
+                if resposta:
+                    qnt_mat_entry.config(state='normal')
+                    cod_prof_entry.config(state='normal')
+                    pos_mat_mov_entry.config(state='normal')
+                    data_emprestimo_entry.config(state='normal')
+                    bt_confirmar.config(state='normal')
+                    bt_cancelar.config(state='normal')
+                    cod_emprestimo_entry.config(state='disabled')  
 
                         
         except mysql.connector.Error as erro:
                 print("Erro ao pesquisar o dado:", erro)
                 messagebox.showinfo("Mensagem", "Pesquisa não realizada.")
-           
-    bt_limpar_mat = Button(frame_1,  text= 'Limpar', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
+    def destruir_campos():
+        bt_limpar_mat.destroy()
+        bt_buscar_mat.destroy()
+        bt_menu_voltar.destroy()
+        bt_confirmar.destroy()
+        bt_cancelar.destroy()
+        lb_cod_emprestimo.destroy()
+        cod_emprestimo_entry.destroy()
+        lb_qnt_atual.destroy()
+        qnt_atual_entry.destroy()
+        lb_qnt_min.destroy()
+        qnt_min_entry.destroy()
+        lb_material.destroy()
+        material_entry.destroy()
+        lb_qnt_mat.destroy()
+        qnt_mat_entry.destroy()
+        lb_cod_prof.destroy()
+        cod_prof_entry.destroy()
+        lb_pos_mat_mov.destroy()
+        pos_mat_mov_entry.destroy()
+        lb_data_emprestimo.destroy()
+        data_emprestimo_entry.destroy()
+
+    def menu_voltar():
+        destruir_campos()
+        menu_voltar()
+
+    def limpar():
+
+        cod_emprestimo_entry.config(state='normal')
+        qnt_atual_entry.config(state='normal')
+        qnt_min_entry.config(state='normal')
+        material_entry.config(state='normal')
+        qnt_mat_entry.config(state='normal')
+        cod_prof_entry.config(state='normal')
+        pos_mat_mov_entry.config(state='normal')
+        data_emprestimo_entry.config(state='normal')
+
+        cod_emprestimo_entry.delete(0, END) 
+        qnt_atual_entry.delete(0, END) 
+        qnt_min_entry.delete(0, END) 
+        material_entry.delete(0, END) 
+        qnt_mat_entry.delete(0, END) 
+        cod_prof_entry.delete(0, END) 
+        pos_mat_mov_entry.delete(0, END) 
+        data_emprestimo_entry.delete(0, END) 
+
+        cod_emprestimo_entry.config(state='normal')
+        qnt_atual_entry.config(state='disabled')
+        qnt_min_entry.config(state='disabled')
+        material_entry.config(state='disabled')
+        qnt_mat_entry.config(state='disabled')
+        cod_prof_entry.config(state='disabled')
+        pos_mat_mov_entry.config(state='disabled')
+        data_emprestimo_entry.config(state='disabled')
+        
+
+    bt_limpar_mat = Button(frame_1,  text= 'Limpar', command=limpar, bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_limpar_mat.place(relx=0.14, rely=0.08, relwidth=0.1, relheight=0.14)
             
     bt_buscar_mat = Button(frame_1, command=buscar_emprestimo, text='Buscar',  bg = '#107db2', fg = 'white')
     bt_buscar_mat.place(relx=0.26, rely=0.08, relwidth=0.1, relheight=0.14)
+    janela.bind("<Return>", lambda event: buscar_emprestimo())
 
     bt_menu_voltar = Button(frame_1, command=menu_inicial, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_menu_voltar.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
@@ -210,7 +283,6 @@ def emprestimo():
     qnt_atual_entry = Entry(frame_1 )
     qnt_atual_entry.place(relx= 0.05, rely= 0.75, relwidth= 0.1)
     qnt_atual_entry.config(state='disabled')
-
     
     lb_qnt_min = Label(frame_1, text = "Qnt Minima.", bg= '#dfe3ee', fg = '#107db2')
     lb_qnt_min.place(relx= 0.17, rely= 0.67 )
