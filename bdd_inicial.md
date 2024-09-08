@@ -1,6 +1,6 @@
-pip install reportlab
 
 create database almoxarifado;
+use almoxarifado;
 
 create table materiais(
 codigo_mat int primary key not null,
