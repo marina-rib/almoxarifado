@@ -1,0 +1,55 @@
+CREATE DATABASE almoxarifado;
+USE almoxarifado;
+
+CREATE TABLE tipoMovimentacao (
+    idTipoMovimentacao INT PRIMARY KEY,
+    tipoEntrada INT,
+    descricao VARCHAR(45)
+);
+
+CREATE TABLE professor (
+    registro INT PRIMARY KEY,
+    nome VARCHAR(255),
+    telefone BIGINT,
+    tipoUsuario VARCHAR(1),
+    senha VARCHAR(255),
+    email VARCHAR(255)
+);
+
+CREATE TABLE movimentacao (
+    idMovimentacao INT PRIMARY KEY AUTO_INCREMENT,
+    data DATE,
+    hora TIME,
+    observacao_mov VARCHAR(255),
+    tipoMovimentacao_idTipoMovimentacao INT,
+    professor_registro INT,
+    professor_logado INT,
+    FOREIGN KEY (tipoMovimentacao_idTipoMovimentacao) REFERENCES tipoMovimentacao(idTipoMovimentacao),
+    FOREIGN KEY (professor_registro) REFERENCES professor(registro)
+);
+
+CREATE TABLE materiais (
+    codigo_mat INT PRIMARY KEY,
+    tipo VARCHAR(1),
+    numeroBp INT,
+    descricao VARCHAR(255),
+    observacao VARCHAR(255)
+);
+
+CREATE TABLE movimentacao_has_materiais (
+    qtd INT,
+    materiais_codigo_mat INT,
+    movimentacao_idMovimentacao INT,
+    PRIMARY KEY (materiais_codigo_mat, movimentacao_idMovimentacao),
+    FOREIGN KEY (materiais_codigo_mat) REFERENCES materiais(codigo_mat),
+    FOREIGN KEY (movimentacao_idMovimentacao) REFERENCES movimentacao(idMovimentacao)
+);
+
+CREATE TABLE posicao_estoque (
+    quantidadeMinima INT,
+    quantidadeAtual INT,
+    quantidadeMaxima INT,
+    materiais_codigo_mat INT,
+    PRIMARY KEY (materiais_codigo_mat),
+    FOREIGN KEY (materiais_codigo_mat) REFERENCES materiais(codigo_mat)
+);
