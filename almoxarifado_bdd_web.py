@@ -20,7 +20,7 @@ janela.title("ALMOXARIFADO")
 janela.configure(background= '#1e3743')
 janela.geometry("700x600")
 janela.resizable(True, True)
-janela.maxsize(width=800, height=700)
+#janela.maxsize(width=800, height=700)
 janela.minsize(width=500, height=300)
 frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
 frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
@@ -360,26 +360,30 @@ def professores():
         email = email_entry.get()
         if registro == "" or nome == "" or telefone == "" or tipoUsuario == "" or senha == "" or email == "":
             messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos, e tente novamente.")
+                
         else:
-            try:
-                    cursor = conexao.cursor()
-                    cursor.execute("INSERT INTO professor (registro, nome, telefone, tipoUsuario, senha, email) VALUES (%s, %s, %s, %s, %s, %s)", (registro, nome, telefone, tipoUsuario,senha,email))
-                    conexao.commit()
-            except mysql.connector.Error as erro:
-                    print("Erro ao inserir os dados:", erro)
-                    messagebox.showinfo("Mensagem", "Erro ao inserir os dados.")
-            finally:
-                    bt_novo_prof.config(state='disabled')
-                    numero_tel_entry.config(state='disabled')
-                    tipo_usuario_entry.config(state='disabled')
-                    senha_entry.config(state='disabled')
-                    email_entry.config(state='disabled')
-                    nome_entry.config(state='disabled')
-                    limpar_tabela()
-                    lista_prof.delete(*lista_prof.get_children())
-                    pesquisar_tabela_prof()
-                    cod_prof_entry.config(state='normal')
-                    cod_prof_entry.focus()
+            if "@" not in email:
+                messagebox.showinfo("Mensagem", "Email invalido.")
+            else:
+                try:
+                        cursor = conexao.cursor()
+                        cursor.execute("INSERT INTO professor (registro, nome, telefone, tipoUsuario, senha, email) VALUES (%s, %s, %s, %s, %s, %s)", (registro, nome, telefone, tipoUsuario,senha,email))
+                        conexao.commit()
+                except mysql.connector.Error as erro:
+                        print("Erro ao inserir os dados:", erro)
+                        messagebox.showinfo("Mensagem", "Erro ao inserir os dados.")
+                finally:
+                        bt_novo_prof.config(state='disabled')
+                        numero_tel_entry.config(state='disabled')
+                        tipo_usuario_entry.config(state='disabled')
+                        senha_entry.config(state='disabled')
+                        email_entry.config(state='disabled')
+                        nome_entry.config(state='disabled')
+                        limpar_tabela()
+                        lista_prof.delete(*lista_prof.get_children())
+                        pesquisar_tabela_prof()
+                        cod_prof_entry.config(state='normal')
+                        cod_prof_entry.focus()
 
 
     def ocultar_senha(senha):
@@ -518,22 +522,25 @@ def professores():
             if registro == "" or nome == "" or telefone == "" or tipoUsuario == "" or senha == "" or email == "":
                 messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos, e tente novamente.")
             else:
-                try:
+                if "@" not in email:
+                    messagebox.showinfo("Mensagem", "Email invalido.")
+                else:
+                    try:
 
-                    cursor = conexao.cursor()
-                    cursor.execute("UPDATE professor SET nome = %s, telefone = %s, tipoUsuario = %s, senha = %s, email = %s WHERE registro = %s",
-                    (nome, telefone, tipoUsuario, senha, email, registro))
-                    conexao.commit()
-                except mysql.connector.Error as e:
-                    print("Erro ao atualizar :", e)
-                finally:
-                    bt_confirmar.config(state='disabled')
-                    bt_cancelar.config(state='disabled')
-                    cod_prof_entry.config(state='normal')
-                    limpar_tabela()
-                    lista_prof.delete(*lista_prof.get_children())
-                    pesquisar_tabela_prof()
-                    cod_prof_entry.focus()
+                        cursor = conexao.cursor()
+                        cursor.execute("UPDATE professor SET nome = %s, telefone = %s, tipoUsuario = %s, senha = %s, email = %s WHERE registro = %s",
+                        (nome, telefone, tipoUsuario, senha, email, registro))
+                        conexao.commit()
+                    except mysql.connector.Error as e:
+                        print("Erro ao atualizar :", e)
+                    finally:
+                        bt_confirmar.config(state='disabled')
+                        bt_cancelar.config(state='disabled')
+                        cod_prof_entry.config(state='normal')
+                        limpar_tabela()
+                        lista_prof.delete(*lista_prof.get_children())
+                        pesquisar_tabela_prof()
+                        cod_prof_entry.focus()
 
             
     #função para verificar se o usuario que realmente excluir um professor    
