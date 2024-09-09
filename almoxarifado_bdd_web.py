@@ -427,6 +427,7 @@ def professores():
                 for linha in resultados:  
                     tipo_usuario_entry.delete(0, END)
                     senha_entry.delete(0, END)
+                    nome_entry.delete(0, END)
                     numero_tel_entry.delete(0, END)
                     nome_entry.insert(0, linha[1] )
                     numero_tel_entry.insert(0, linha[2] )
@@ -592,6 +593,7 @@ def professores():
             senha_entry.config(state='normal', show="*")
             numero_tel_entry.config(state='normal')
             cod_prof_entry.delete(0, END)
+            nome_entry.delete(0, END)
             email_entry.delete(0,END)
             tipo_usuario_entry.delete(0, END)
             senha_entry.delete(0, END)
@@ -728,7 +730,7 @@ def materiais():
             password="",
             database="almoxarifado"
         ) 
-    
+    professores
     #Função para mudar até o CRUD da tabela posiçao_estoque
     def mudar_menu():
         destoir_campos()
