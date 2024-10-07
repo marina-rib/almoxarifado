@@ -177,6 +177,7 @@ def estoque_faltas():
             consulta_sql = "SELECT posicao_estoque.materiais_codigo_mat, posicao_estoque.quantidadeMinima, posicao_estoque.quantidadeAtual, posicao_estoque.quantidadeMaxima, materiais.descricao FROM posicao_estoque INNER JOIN materiais ON posicao_estoque.materiais_codigo_mat = materiais.codigo_mat WHERE materiais_codigo_mat = %s"
             cursor.execute(consulta_sql, (texto_digitado,))
             resultados = cursor.fetchall()
+        
             for linha in resultados:
                 lista_pos2.insert("", END, values=linha)
                 qnt_min = linha [1]
@@ -206,9 +207,8 @@ def estoque_faltas():
                 lb_cod_pos_estoque.config(text=novo_texto)
 
 
-        except mysql.connector.Error as erro:
-            print("Erro ao pesquisar o dado:", erro)
-            messagebox.shoaskyesnowinfo("Mensagem", "pesquisa não realizada.")
+        except :
+            messagebox.showinfo("Mensagem", "esquisa não realizada. Código não encontrado.")
 
 
     lb_cod_pos = Label(frame_1, text = "Registro", bg= '#dfe3ee', fg = '#107db2')
@@ -547,7 +547,6 @@ def professores():
     #função para verificar se o usuario que realmente excluir um professor    
     def excluir_verificaçao():
         texto_digitado = cod_prof_entry.get()
-        print("id digitado:", texto_digitado)
         resposta = messagebox.askyesno("EXCLUIR", f"Tem certeza que deseja excluir este professor?")
         if resposta:
             texto_digitado = cod_prof_entry.get()
@@ -794,8 +793,14 @@ def materiais():
         numeroBp = numeroBp_entry.get()
         descricao = descricao_entry.get()
         observacao = observacao_entry.get()
-        
-        if codigo_mat == "" or tipo =="" or numeroBp == "" or descricao == "" or observacao == "":
+
+        tipo = tipo.upper()
+
+        if tipo != "E" and tipo != "C" and tipo != "F":
+            messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos. O tipo deve ser E(equipamento), C(componente) ou F(ferramenta).")
+
+    
+        elif codigo_mat == "" or tipo =="" or numeroBp == "" or descricao == "" or observacao == "":
             messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos, e tente novamente.")
         else:
             try:
@@ -972,7 +977,6 @@ def materiais():
     #Função para verificar se o usuario deseja realmente excluir um registro da tabela materiais
     def excluir_verificacao():
         texto_digitado = cod_mateiral_entry.get()
-        print("id digitado:", texto_digitado)
         resposta = messagebox.askyesno("EXCLUIR", f"Tem certeza que deseja excluir este material?")
         if resposta:
             texto_digitado = cod_mateiral_entry.get()
@@ -1265,9 +1269,9 @@ def pos_estoque():
                         quantidadeMinima_entry.delete(0, END) 
                         quantidadeAtual_entry.delete(0, END)
                         quantidadeMaxima_entry.delete(0, END) 
-                        quantidadeMinima_entry.insert(0, linha[1] )
-                        quantidadeAtual_entry.insert(0, linha[2] )
-                        quantidadeMaxima_entry.insert(0, linha[3] )
+                        quantidadeMinima_entry.insert(0, linha[0] )
+                        quantidadeAtual_entry.insert(0, linha[1] )
+                        quantidadeMaxima_entry.insert(0, linha[2] )
                         quantidadeMinima_entry.config(state='disabled')
                         quantidadeAtual_entry.config(state='disabled')
                         quantidadeMaxima_entry.config(state='disabled')     
@@ -1407,7 +1411,6 @@ def pos_estoque():
     #Função para verificar se o usuario deseja realmente excluir um registro da tabela pos_estoque
     def excluir_verificacao():
         texto_digitado = cod_pos_estoque_entry.get()
-        print("id digitado:", texto_digitado)
         resposta = messagebox.askyesno("EXCLUIR", f"Tem certeza que deseja excluir esta posição?")
         if resposta:
             texto_digitado = cod_pos_estoque_entry.get()
