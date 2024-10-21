@@ -60,7 +60,7 @@ def menu_inicial():
     bt_mudar_estoque = Button(frame_1, command=mudar_estoque, text= 'Estoque', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
     bt_mudar_estoque.place(relx=0.15, rely=0.5, relwidth=0.30, relheight=0.15)
     
-    bt_mudar_materiais = Button(frame_1, command=mudar_materiais, text= 'materiais', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
+    bt_mudar_materiais = Button(frame_1, command=mudar_materiais, text= 'Materiais', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
     bt_mudar_materiais.place(relx=0.15, rely=0.30, relwidth=0.30, relheight=0.15)
     
     bt_mudar_estoque_faltas = Button(frame_1, command=mudar_estoque_faltas, text= 'Baixas', bg = '#107db2', fg = 'white', font= ("verdana", 13, "bold"))
@@ -102,7 +102,7 @@ def estoque_faltas():
         pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
         pasta_documentos = os.path.expanduser("~/Documents")
         
-        nome_arquivo = os.path.join( , "lista_compras_almoxarifado.pdf")
+        nome_arquivo = os.path.join("C:/Users/pichau/TCC_ALMOXARIFADO", "lista_compras_almoxarifado.pdf")
         doc = SimpleDocTemplate(nome_arquivo, pagesize=A4)
         elements = []
 
@@ -204,11 +204,10 @@ def estoque_faltas():
                 qnt_sobre = qnt_atual - qnt_max
                 qnt_sobre = str(qnt_sobre)
                 novo_texto = "Produto a acima do maximo : " + qnt_sobre
-                lb_cod_pos_estoque.config(text=novo_texto)
-
+                lb_cod_pos_estoque.config(text=novo_texto)  
 
         except :
-            messagebox.showinfo("Mensagem", "esquisa não realizada. Código não encontrado.")
+            messagebox.showinfo("Mensagem", "Pesquisa não realizada. Código não encontrado.")
 
 
     lb_cod_pos = Label(frame_1, text = "Registro", bg= '#dfe3ee', fg = '#107db2')
@@ -429,6 +428,7 @@ def professores():
                     senha_entry.delete(0, END)
                     nome_entry.delete(0, END)
                     numero_tel_entry.delete(0, END)
+                    email_entry.delete(0, END)
                     nome_entry.insert(0, linha[1] )
                     numero_tel_entry.insert(0, linha[2] )
                     tipo_usuario_entry.insert(0, linha[3] )
