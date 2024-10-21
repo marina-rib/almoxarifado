@@ -77,9 +77,9 @@ def estoque_faltas():
     
     janela.title("ALMOXARIFADO ESTOQUE, EM BAIXAS")
     conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
+            host="tcc-almoxarifado.mysql.database.azure.com",
+            user="tcc",
+            password="Almoxarifado@",
             database="almoxarifado"
         )
     
@@ -102,7 +102,7 @@ def estoque_faltas():
         pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
         pasta_documentos = os.path.expanduser("~/Documents")
         
-        nome_arquivo = os.path.join(pasta_documentos, "lista_compras_almoxarifado.pdf")
+        nome_arquivo = os.path.join( , "lista_compras_almoxarifado.pdf")
         doc = SimpleDocTemplate(nome_arquivo, pagesize=A4)
         elements = []
 
@@ -286,9 +286,9 @@ def professores():
     
     janela.title("ALMOXARIFADO PROFESSORES")
     conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
+            host="tcc-almoxarifado.mysql.database.azure.com",
+            user="tcc",
+            password="Almoxarifado@",
             database="almoxarifado"
         )
 
@@ -724,11 +724,11 @@ def materiais():
     
     janela.title("ALMOXARIFADO materiais")
     conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
+            host="tcc-almoxarifado.mysql.database.azure.com",
+            user="tcc",
+            password="Almoxarifado@",
             database="almoxarifado"
-        ) 
+        )
     professores
     #Função para mudar até o CRUD da tabela posiçao_estoque
     def mudar_menu():
@@ -795,11 +795,15 @@ def materiais():
         observacao = observacao_entry.get()
 
         tipo = tipo.upper()
-
+        if tipo == "FERRAMENTA":
+            tipo = "F"
+        if tipo == "EQUIPAMENTO":
+            tipo = "E"
+        if tipo == "COMPONENTE":
+            tipo = "C"
         if tipo != "E" and tipo != "C" and tipo != "F":
             messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos. O tipo deve ser E(equipamento), C(componente) ou F(ferramenta).")
 
-    
         elif codigo_mat == "" or tipo =="" or numeroBp == "" or descricao == "" or observacao == "":
             messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos, e tente novamente.")
         else:
@@ -951,7 +955,19 @@ def materiais():
             observacao = observacao_entry.get()
             if codigo_mat == "" or tipo =="" or numeroBp == "" or descricao == "" or observacao == "":
                 messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos, e tente novamente.")
-            else:
+            tipo = tipo.upper()
+            if tipo == "FERRAMENTA":
+                tipo = "F"
+            if tipo == "EQUIPAMENTO":
+                tipo = "E"
+            if tipo == "COMPONENTE":
+                tipo = "C"
+            if tipo != "E" and tipo != "C" and tipo != "F":
+                messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos. O tipo deve ser E(equipamento), C(componente) ou F(ferramenta).")
+
+            elif codigo_mat == "" or tipo =="" or numeroBp == "" or descricao == "" or observacao == "":
+                messagebox.showinfo("Mensagem", "Verifique se os dados correspondem a valores válidos, e tente novamente.")
+            else: 
                 try:
 
                     cursor = conexao.cursor()
@@ -1138,9 +1154,9 @@ def pos_estoque():
     
     janela.title("ALMOXARIFADO ESTOQUE")
     conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
+            host="tcc-almoxarifado.mysql.database.azure.com",
+            user="tcc",
+            password="Almoxarifado@",
             database="almoxarifado"
         )
     #Função para mudar até o CRUD da tabela professor
