@@ -12,6 +12,8 @@ from reportlab.lib import colors
 from reportlab.lib.units import mm
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+import functools 
+
     
 
 #Cria a janela principal
@@ -347,6 +349,13 @@ def professores():
         bt_cancelar.config(state='disabled')
         cod_prof_entry.config(state="normal")
         cod_prof_entry.focus()
+        
+        def limpar_tabela2():
+            email_entry.delete(0, END)
+            nome_entry.delete(0, END)
+            tipo_usuario_entry.delete(0, END)
+            senha_entry.delete(0, END)
+            numero_tel_entry.delete(0, END)
 
         
     #Função com a logica de registramento dos professores
@@ -444,6 +453,7 @@ def professores():
             else:
                 resposta = messagebox.askyesno("Mensagem", "Código não encontrado, deseja inserir um(a) novo(a) professor(a)?")
                 if resposta:
+
                     nome_entry.focus()
                     cod_prof_entry.config(state='disabled')
                     bt_novo_prof.config(state='normal')
@@ -452,6 +462,11 @@ def professores():
                     senha_entry.config(state='normal')
                     email_entry.config(state='normal')
                     numero_tel_entry.config(state='normal')
+                    email_entry.delete(0, END)
+                    nome_entry.delete(0, END)
+                    tipo_usuario_entry.delete(0, END)
+                    senha_entry.delete(0, END)
+                    numero_tel_entry.delete(0, END)
                     bt_alterar_prof.config(state='disabled')
                     bt_apagar_prof.config(state='disabled')
                     bt_cancelar.config(state='normal')
@@ -1196,6 +1211,7 @@ def pos_estoque():
         quantidadeMinima_entry.delete(0, END)
         quantidadeAtual_entry.delete(0, END)
         quantidadeMaxima_entry.delete(0, END)
+        material_estoque_entry.delete(0, END)
         quantidadeMinima_entry.config(state='disabled')
         quantidadeAtual_entry.config(state='disabled')
         quantidadeMaxima_entry.config(state='disabled')
@@ -1358,8 +1374,44 @@ def pos_estoque():
             cod_pos_estoque_entry.focus()
 
                            
-                           
-    #Função com a logica alterar materiais
+    def buscar_material_estoque():
+       
+            material_nome = material_estoque_entry.get()
+            cursor = conexao.cursor()
+            cursor.execute("SELECT codigo_mat FROM materiais WHERE descricao = %s", (material_nome,))
+            resultados = cursor.fetchall()
+            if resultados:
+                codigo_mat = resultados[0][0]
+                cursor.execute("SELECT * FROM posicao_estoque WHERE materiais_codigo_mat = %s", (codigo_mat,))
+                posicao_estoque = cursor.fetchall()
+                for linha in posicao_estoque:  
+                    cod_pos_estoque_entry.config(state='normal')
+                    quantidadeMinima_entry.config(state='normal')
+                    quantidadeAtual_entry.config(state='normal')
+                    quantidadeMaxima_entry.config(state='normal')
+                    
+                    cod_pos_estoque_entry.delete(0, END)
+                    quantidadeMinima_entry.delete(0, END)
+                    quantidadeAtual_entry.delete(0, END)
+                    quantidadeMaxima_entry.delete(0, END)
+                    
+                    cod_pos_estoque_entry.insert(0, linha[3] )
+                    quantidadeMinima_entry.insert(0, linha[0] )
+                    quantidadeAtual_entry.insert(0, linha[1] )
+                    quantidadeMaxima_entry.insert(0, linha[2] )
+                    
+                    bt_alterar.config(state="normal")
+                    bt_apagar.config(state="normal")
+                    quantidadeMinima_entry.config(state='disabled')
+                    quantidadeAtual_entry.config(state='disabled')
+                    quantidadeMaxima_entry.config(state='disabled')
+
+                    
+            else:
+                print("Material não encontrado.")
+              
+              
+                                  
     def alterar_pos1():
         estado = bt_novo.cget("state")
         if estado == "normal":
@@ -1508,6 +1560,9 @@ def pos_estoque():
     bt_mudar_menu = Button(frame_1, command=mudar_menu, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_mudar_menu.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
     
+    bt_mudar_menu = Button(frame_1, command=buscar_material_estoque, text= 'Buscar', bg = '#107db2', fg = 'white', font= ("verdana", 9, "bold"))
+    bt_mudar_menu.place(relx=0.52, rely=0.88, relwidth=0.13, relheight=0.1)
+    
     #labels e campos de digitaçao 
     
     lb_cod_pos_estoque = Label(frame_1, text = "Código", bg= '#dfe3ee', fg = '#107db2')
@@ -1515,6 +1570,11 @@ def pos_estoque():
     cod_pos_estoque_entry = Entry(frame_1 )
     cod_pos_estoque_entry.place(relx= 0.05, rely= 0.15, relwidth= 0.08)
     cod_pos_estoque_entry.focus()
+    
+    lb_material_estoque = Label(frame_1, text = "Material", bg= '#dfe3ee', fg = '#107db2')
+    lb_material_estoque.place(relx= 0.4, rely= 0.83 )
+    material_estoque_entry = Entry(frame_1 )
+    material_estoque_entry.place(relx= 0.4, rely= 0.9, relwidth= 0.1)
 
     lb_quantidadeMinima = Label(frame_1, text="Quantidade mínima", bg= '#dfe3ee', fg = '#107db2')
     lb_quantidadeMinima.place(relx=0.05, rely=0.35)
