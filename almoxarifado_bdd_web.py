@@ -16,13 +16,11 @@ import functools
 
     
 
-#Cria a janela principal
 janela = Tk()
 janela.title("ALMOXARIFADO")
 janela.configure(background= '#1e3743')
 janela.geometry("700x600")
 janela.resizable(True, True)
-#janela.maxsize(width=800, height=700)
 janela.minsize(width=500, height=300)
 frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
 frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
@@ -55,7 +53,6 @@ def menu_inicial():
     frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
     frame_2.destroy()
 
-    # Adiciona um título ao menu
     manu_label = Label(frame_1, text="Menu Principal", font=("Helvetica", 24, "bold"), bg="#dfe3ee")
     manu_label.place(relx=0.32, rely=0.13)
     
@@ -275,10 +272,7 @@ def estoque_faltas():
     pesquisar_estoque_baixo()
     
     
-#=========================================================================================================#
-#PROFESSOR#
 
-#Funçao para alternar até o CRUD da tabela professor
 def professores():
     frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
     frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
@@ -293,13 +287,11 @@ def professores():
             database="almoxarifado"
         )
 
-    #Função para mudar para o CRUD dos materiais
     def menu_voltar():
         destruir_campos()
         menu_inicial()   
 
         
-    #Função para destruir tudo na tela a fim de sair do CRUD dos professores    
     def destruir_campos():
         bt_limpar_prof.destroy()
         bt_buscar_prof.destroy()
@@ -324,7 +316,6 @@ def professores():
         frame_2.destroy()
         frame_1.destroy()
      
-    #Funçao para limpar atualizar automaticamente quando feita alguma mudança no banco de dados
     def limpar_tabela():
         nome_entry.config(state='normal')
         tipo_usuario_entry.config(state='normal')
@@ -358,7 +349,6 @@ def professores():
             numero_tel_entry.delete(0, END)
 
         
-    #Função com a logica de registramento dos professores
     def cadastrar_prof():
         registro = cod_prof_entry.get()
         nome = nome_entry.get()
@@ -397,7 +387,6 @@ def professores():
     def ocultar_senha(senha):
         return '*' * len(senha)
 
-    #Função para mostrar toda tabela professores ao usuario 
     def pesquisar_tabela_prof():
         try:
             cursor = conexao.cursor()
@@ -414,7 +403,6 @@ def professores():
         cod_prof_entry.focus()
  
             
-    #Função para pesquisar um professor especifico
     def buscar_prof():
         try:
             cursor = conexao.cursor()
@@ -477,7 +465,6 @@ def professores():
             messagebox.shoaskyesnowinfo("Mensagem", "Pesquisa não realizada.")
 
       
-    #Função para abilitar os campos de digitação quando selecionado a opção de alterar      
     def alterar_professor():
         nome_entry.config(state='normal')
         tipo_usuario_entry.config(state='normal')
@@ -493,7 +480,6 @@ def professores():
 
 
       
-    #Função para desabilitar os campos de digitação caso o usuario cancele a alteração  
     def alterar_prof_can():
         estado = bt_novo_prof.cget("state")
         if estado == "normal":
@@ -523,7 +509,6 @@ def professores():
 
 
 
-    #Função com a logica de alterar o professor
     def alterar_prof1():
         estado = bt_novo_prof.cget("state")
         if estado == "normal":
@@ -559,7 +544,6 @@ def professores():
                         cod_prof_entry.focus()
 
             
-    #função para verificar se o usuario que realmente excluir um professor    
     def excluir_verificaçao():
         texto_digitado = cod_prof_entry.get()
         resposta = messagebox.askyesno("EXCLUIR", f"Tem certeza que deseja excluir este professor?")
@@ -570,7 +554,6 @@ def professores():
             messagebox.showinfo("Mensagem", "Exclusão cancelada.")
         cod_prof_entry.focus()
      
-     #função com a logica de exclusao do professor       
     def exluir_prof():
         try:
             cursor = conexao.cursor()
@@ -624,16 +607,13 @@ def professores():
             numero_tel_entry.config(state='disabled')   
             email_entry.config(state='disabled')  
             
-#==================================================================================================================================================#
          
     
-    #Botoens da tela Professores   
     bt_limpar_prof = Button(frame_1, text= 'Limpar', command=limpar_tabela ,bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_limpar_prof.place(relx=0.14, rely=0.08, relwidth=0.1, relheight=0.14)
     
     bt_buscar_prof = Button(frame_1, command= buscar_prof, text='Buscar' ,  bg = '#107db2', fg = 'white')
     bt_buscar_prof.place(relx=0.26, rely=0.08, relwidth=0.1, relheight=0.14)
-    #quando o usuario clicar no enter a funçao burcar professor especifica do id é selecionada
     janela.bind("<Return>", lambda event: buscar_prof())
     
     bt_novo_prof = Button(frame_1, command=cadastrar_prof,text='' , bg = 'SystemButtonFace',fg = 'white')
@@ -659,7 +639,6 @@ def professores():
     bt_menu_voltar = Button(frame_1, command=menu_inicial, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_menu_voltar.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
     
-    #labels e campos de digitaçao 
     lb_cod_prof = Label(frame_1, text = "Registro", bg= '#dfe3ee', fg = '#107db2')
     lb_cod_prof.place(relx= 0.05, rely= 0.05 )
     cod_prof_entry = Entry(frame_1 )
@@ -700,7 +679,6 @@ def professores():
     
    
     
-    #Tabela que aparece na parte de baixo da tela com os registros vindos do banco de dados (tabela professor)
     lista_prof = ttk.Treeview(frame_2, height=3,column=("col1", "col2", "col3", "col4", "col5", "col6", "col7" ))
     lista_prof.heading("#0", text="")
     lista_prof.heading("#1", text="Registro")
@@ -722,15 +700,9 @@ def professores():
     scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
     lista_prof.bind("<ButtonRelease-1>", item_selecionado_lista_prof)
 
-    #chama automaticamente pesquisar_tabela para que assim que o usuario clique ja apareça os registros
     pesquisar_tabela_prof()
 
 
-
-#==================================================================================================================================================#
-#materiais#
-
-#Função para alterar até o CRUD da tabela materiais
 def materiais(): 
     frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
     frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
@@ -744,13 +716,12 @@ def materiais():
             password="Almoxarifado@",
             database="almoxarifado"
         )
-    professores
-    #Função para mudar até o CRUD da tabela posiçao_estoque
+    
+    
     def mudar_menu():
         destoir_campos()
         menu_inicial()
     
-    #função para destroir os campos a fim de sair da tela materiais    
     def destoir_campos():
         bt_limpar_mat.destroy()
         bt_buscar_mat.destroy()
@@ -777,7 +748,6 @@ def materiais():
 
         
 
-    #Função para limpar os campos de digitação e a tabela inferior a fim de atualizar altomaticamente     
     def limpar_material():
         cod_mateiral_entry.config(state='normal')
         tipo_entry.config(state='normal')
@@ -801,7 +771,6 @@ def materiais():
         cod_mateiral_entry.focus()
 
 
-     #Função com a logica para adicionar um novo material ao banco           
     def novo_material():
         codigo_mat = cod_mateiral_entry.get()
         tipo = tipo_entry.get()
@@ -847,7 +816,6 @@ def materiais():
                 cod_mateiral_entry.focus()
 
 
-    #Função com a logica para buscar toda a tabela materiais
     def buscar_tabela_materiais():     
             try:
                 cursor = conexao.cursor()
@@ -861,7 +829,6 @@ def materiais():
                 messagebox.shoaskyesnowinfo("Mensagem", "Pesquisa não realizada.")
          
                 
-    #Função com a logica para buscar um registro especifico na tabela materiais
     def pesquisar_texto_material():                
             try:
                 cursor = conexao.cursor()
@@ -916,7 +883,6 @@ def materiais():
                 messagebox.shoaskyesnowinfo("Mensagem", "Pesquisa não realizada.")
                 
                 
-    #Função para abilitar os campos de digitação para alterar dados do material            
     def alterar_materiais():
         tipo_entry.config(state='normal')
         numeroBp_entry.config(state='normal')
@@ -929,7 +895,6 @@ def materiais():
         cod_mateiral_entry.config(state='disabled')
         tipo_entry.focus()
 
-    #Função para desabiliatar os campos caso o usuario cancele a alteração
     def alterar_materiais_canc():
         if bt_novo_mat.winfo_exists():
             tipo_entry.config(state='disabled')
@@ -957,7 +922,6 @@ def materiais():
             cod_mateiral_entry.focus()
 
     
-    #Função para alterar materiais
     def alterar_materiais1():
         estado = bt_novo_mat.cget("state")
         if estado == "normal":
@@ -1005,7 +969,6 @@ def materiais():
                     lista_materiais.delete(*lista_materiais.get_children())
                     buscar_tabela_materiais()
                 
-    #Função para verificar se o usuario deseja realmente excluir um registro da tabela materiais
     def excluir_verificacao():
         texto_digitado = cod_mateiral_entry.get()
         resposta = messagebox.askyesno("EXCLUIR", f"Tem certeza que deseja excluir este material?")
@@ -1015,7 +978,6 @@ def materiais():
         else:
             messagebox.showinfo("Mensagem", "Operação cancelada.")
 
-    #Função com a logica de exclusão de um registro 
     def delete_material():
         try:
             cursor = conexao.cursor()
@@ -1066,16 +1028,11 @@ def materiais():
             
         
     
- #==================================================================================================================================================#
-         
-    
-    #Botoens da tela materiais   
     bt_limpar_mat = Button(frame_1, command=limpar_material, text= 'Limpar', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_limpar_mat.place(relx=0.14, rely=0.08, relwidth=0.1, relheight=0.14)
             
     bt_buscar_mat = Button(frame_1, text='Buscar' ,command=pesquisar_texto_material,  bg = '#107db2', fg = 'white')
     bt_buscar_mat.place(relx=0.26, rely=0.08, relwidth=0.1, relheight=0.14)
-    #quando o usuario clicar no enter a funçao burcar professor especifica do id é selecionada
     janela.bind("<Return>", lambda event: pesquisar_texto_material())
     
     bt_novo_mat = Button(frame_1, text='' , command = novo_material,bg = 'SystemButtonFace',fg = 'white')
@@ -1102,7 +1059,6 @@ def materiais():
     bt_mudar_menu = Button(frame_1, command=mudar_menu, text= 'Menu', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_mudar_menu.place(relx=0.10, rely=0.85, relwidth=0.15, relheight=0.15)
     
-    #labels e campos de digitaçao 
     lb_cod_material = Label(frame_1, text = "Código", bg= '#dfe3ee', fg = '#107db2')
     lb_cod_material.place(relx= 0.05, rely= 0.05 )
     cod_mateiral_entry = Entry(frame_1 )
@@ -1133,7 +1089,6 @@ def materiais():
     observacao_entry.place(relx=0.5, rely=0.7, relwidth=0.4)
     observacao_entry.config(state='disabled')
     
-    #Tabela que aparece na parte de baixo da tela com os registros vindos do banco de dados (tabela materiais)
     lista_materiais = ttk.Treeview(frame_2, height=3,column=("col1", "col2", "col3", "col4", "col5"))
     lista_materiais.heading("#0", text="")
     lista_materiais.heading("#1", text="código")
@@ -1152,15 +1107,10 @@ def materiais():
     lista_materiais.configure(yscroll=scroolLista.set)
     scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
     
-    #chama automaticamente buscar_tabela_materiais para que assim que o usuario clique ja apareça os registros
     buscar_tabela_materiais()
     lista_materiais.bind("<ButtonRelease-1>", item_selecionado_lista_materiais)
     
     
-#==================================================================================================================================================#
-#ESTOQUE#
-
-#Função para alterar até o CRUD da tabela pos_estoque
 def pos_estoque():
     frame_1 = Frame(janela, bd=4, bg= '#dfe3ee', highlightbackground= '#759fe6', highlightthickness=3)
     frame_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
@@ -1174,14 +1124,12 @@ def pos_estoque():
             password="Almoxarifado@",
             database="almoxarifado"
         )
-    #Função para mudar até o CRUD da tabela professor
     def mudar_menu():
         destroir_campos()
         menu_inicial()
         
         
 
-    #Função para destroir os campos a fim de sair da tela pos_estoque    
     def destroir_campos():
         bt_limpar.destroy()
         bt_buscar.destroy()
@@ -1202,7 +1150,6 @@ def pos_estoque():
         frame_2.destroy()
         frame_1.destroy()
 
-    #Função para limpar os campos de digitação e a tabela inferior 
     def limpar_texto_estoque():
         quantidadeMinima_entry.config(state='normal')
         quantidadeAtual_entry.config(state='normal')
@@ -1224,7 +1171,6 @@ def pos_estoque():
         cod_pos_estoque_entry.focus()
 
         
-    #Função com a logica para cadastrar uma nova posição no estoque  
     def novo_pos_estoque():
         materiais_codigo_mat_estoque = cod_pos_estoque_entry.get()
         qnt_min_estoque = quantidadeMinima_entry.get()
@@ -1267,7 +1213,6 @@ def pos_estoque():
                         cod_pos_estoque_entry.focus()
 
                 
-    #Função para pesquisar toda a tabela pos_estoque
     def buscar_tabela_posicao_estoque():     
         try:
             cursor = conexao.cursor()
@@ -1280,7 +1225,6 @@ def pos_estoque():
             print("Erro ao pesquisar o dado:", erro)
             messagebox.shoaskyesnowinfo("Mensagem", "pesquisa não realizada.")
             
-    #Função para pesquisar um registro espesifico na tabela pos_estoque
     def pesquisar_texto_pos():
         try:
             cursor = conexao.cursor()
@@ -1335,7 +1279,6 @@ def pos_estoque():
                 print("Erro ao pesquisar o dado:", erro)
                 messagebox.showinfo("Mensagem", "Pesquisa não realizada.")
                 
-    #Função para abilitar os campos de digitação para alterar dados do estoque
     def alterar_pos_estoque():
         quantidadeMinima_entry.config(state='normal')
         quantidadeAtual_entry.config(state='normal')
@@ -1347,7 +1290,6 @@ def pos_estoque():
         cod_pos_estoque_entry.config(state='disabled')
         quantidadeMinima_entry.focus()
         
-    #Função para desabiliatar os campos caso o usuario cancele a alteração
     def alterar_pos_canc():
         estado = bt_novo.cget("state")
         if estado == "normal":
@@ -1476,7 +1418,6 @@ def pos_estoque():
             cod_pos_estoque_entry.focus()
 
                 
-    #Função para verificar se o usuario deseja realmente excluir um registro da tabela pos_estoque
     def excluir_verificacao():
         texto_digitado = cod_pos_estoque_entry.get()
         resposta = messagebox.askyesno("EXCLUIR", f"Tem certeza que deseja excluir esta posição?")
@@ -1486,7 +1427,6 @@ def pos_estoque():
         else:
             messagebox.showinfo("Mensagem", "Operação cancelada.")
     
-    #Função com a logica de exclusão de um registro 
     def delete_pos_estoque():
         try:
             cursor = conexao.cursor()
@@ -1526,15 +1466,12 @@ def pos_estoque():
             quantidadeMinima_entry.config(state='disabled')
             quantidadeAtual_entry.config(state='disabled')
             quantidadeMaxima_entry.config(state='disabled')  
- #==================================================================================================================================================#
   
-    #Botoens da tela estoque
     bt_limpar = Button(frame_1, command=limpar_texto_estoque, text= 'Limpar', bg = '#107db2', fg = 'white', font= ("verdana", 10, "bold"))
     bt_limpar.place(relx=0.14, rely=0.08, relwidth=0.1, relheight=0.14)
             
     bt_buscar = Button(frame_1, text='Buscar' ,command=pesquisar_texto_pos,  bg = '#107db2', fg = 'white')
     bt_buscar.place(relx=0.26, rely=0.08, relwidth=0.1, relheight=0.14)
-    #quando o usuario clicar no enter a funçao burcar professor especifica do id é selecionada
     janela.bind("<Return>", lambda event: pesquisar_texto_pos())   
 
     bt_novo = Button(frame_1, text='' , command = novo_pos_estoque,bg = 'SystemButtonFace',fg = 'white')
@@ -1563,7 +1500,6 @@ def pos_estoque():
     bt_mudar_menu = Button(frame_1, command=buscar_material_estoque, text= 'Buscar', bg = '#107db2', fg = 'white', font= ("verdana", 9, "bold"))
     bt_mudar_menu.place(relx=0.52, rely=0.88, relwidth=0.13, relheight=0.1)
     
-    #labels e campos de digitaçao 
     
     lb_cod_pos_estoque = Label(frame_1, text = "Código", bg= '#dfe3ee', fg = '#107db2')
     lb_cod_pos_estoque.place(relx= 0.05, rely= 0.05 )
@@ -1594,7 +1530,6 @@ def pos_estoque():
     quantidadeMaxima_entry.place(relx=0.5, rely=0.7, relwidth=0.4)
     quantidadeMaxima_entry.config(state='disabled')
 
-    #Tabela que aparece na parte de baixo da tela com os registros vindos do banco de dados (tabela pos_estoque)
     
     lista_pos = ttk.Treeview(frame_2, height=3,column=("col1", "col2", "col3", "col4", "col5", "col6" ))
     lista_pos.heading("#0", text="")
@@ -1611,14 +1546,11 @@ def pos_estoque():
     lista_pos.column("#5", width=120)
     lista_pos.place(relx=0.01, rely=0.1, relwidth=0.95, relheight=0.85)
     
-    #chama automaticamente pesquisar_tabela para que assim que o usuario clique ja apareça os registros
     buscar_tabela_posicao_estoque()
     scroolLista = Scrollbar(frame_2, orient='vertical')
     lista_pos.configure(yscroll=scroolLista.set)
     scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
     lista_pos.bind("<ButtonRelease-1>", item_selecionado_pos_estoque)
     
-#chama a função pos_estoque para que seja a primeira tela ao entrar no programa 
 menu_inicial()
-#mantem a janela aberta sem que se feche assim que clique em entrar
 janela.mainloop()
